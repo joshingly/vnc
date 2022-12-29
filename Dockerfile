@@ -1,4 +1,4 @@
-FROM debian:stable
+FROM debian:testing
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y \
@@ -11,6 +11,14 @@ RUN apt-get update && apt-get install -y \
     xterm \
     tigervnc-standalone-server \
     tigervnc-common \
+    wget \
+    qtbase5-dev \
+    libxcb-xinerama0 \
+    libxcb-icccm4 \
+    libxcb-image0 \
+    libxcb-keysyms1 \
+    libxcb-render-util0 \
+    libopengl0 \
     gtk2-engines-pixbuf && \
   update-alternatives --set x-terminal-emulator /usr/bin/xfce4-terminal.wrapper
 
@@ -25,6 +33,8 @@ RUN groupadd --gid 7777 dev && \
     chmod 0440 /etc/sudoers.d/josh
 
 USER josh
+
+RUN wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sudo sh /dev/stdin
 
 RUN mkdir ~/.vnc && \
     echo 'password' | vncpasswd -f > ~/.vnc/passwd && \
