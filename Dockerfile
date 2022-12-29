@@ -48,5 +48,5 @@ unset DBUS_SESSION_BUS_ADDRESS\n\
 exec startxfce4\n" | tee ~/.vnc/xstartup && \
     chmod +x ~/.vnc/xstartup && \
     echo " #!/bin/bash\n\
-/usr/bin/vncserver -fg -rfbport 5900 -display :99 -depth 24 -geometry 1024x600 -localhost no -verbose -cleanstale\n" | tee ~/start-vnc && \
+/usr/bin/vncserver -fg -rfbport 5900 -display :99 -depth 24 -geometry 1920x1200 -localhost no -verbose -cleanstale\n" | tee ~/start-vnc && \
     chmod +x ~/start-vnc
