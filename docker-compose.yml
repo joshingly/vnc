@@ -6,8 +6,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: bash -c /root/start-vnc
+    command: bash -c /home/josh/start-vnc
     ports:
       - '5901:5900'
     volumes:
-      - ./shared:/root/shared:delegated
+      - ./shared:/home/josh/shared:delegated

@@ -2,6 +2,7 @@ FROM debian:stable
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y \
+    sudo \
     dbus-x11 \
     gnupg2 \
     procps \
@@ -12,6 +13,18 @@ RUN apt-get update && apt-get install -y \
     tigervnc-common \
     gtk2-engines-pixbuf && \
   update-alternatives --set x-terminal-emulator /usr/bin/xfce4-terminal.wrapper
+
+ENV TINI_VERSION v0.19.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-arm64 /tini
+RUN chmod +x /tini
+ENTRYPOINT ["/tini", "--"]
+
+RUN groupadd --gid 7777 dev && \
+    useradd --uid 3333 --gid 7777 -m josh && \
+    echo josh ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/josh && \
+    chmod 0440 /etc/sudoers.d/josh
+
+USER josh
 
 RUN mkdir ~/.vnc && \
     echo 'password' | vncpasswd -f > ~/.vnc/passwd && \
@@ -27,8 +40,3 @@ exec startxfce4\n" | tee ~/.vnc/xstartup && \
     echo " #!/bin/bash\n\
 /usr/bin/vncserver -fg -rfbport 5900 -display :99 -depth 24 -geometry 1024x600 -localhost no -verbose -cleanstale\n" | tee ~/start-vnc && \
     chmod +x ~/start-vnc
-
-ENV TINI_VERSION v0.19.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-arm64 /tini
-RUN chmod +x /tini
-ENTRYPOINT ["/tini", "--"]
